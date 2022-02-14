@@ -1,1 +1,1 @@
-# WebGL_Cube_Model
+# WebGL_Orthographic_3D
