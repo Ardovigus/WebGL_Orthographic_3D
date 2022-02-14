@@ -10,14 +10,17 @@ function main() {
     var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
   
     var positionLocation = gl.getAttribLocation(program, "a_position");
-  
-    var colorLocation = gl.getUniformLocation(program, "u_color");
+    var colorLocation = gl.getAttribLocation(program, "a_color");
+    
     var matrixLocation = gl.getUniformLocation(program, "u_matrix");
   
     var positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  
     setGeometry(gl);
+
+    var colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    setColors(gl);
   
     function radToDeg(r) {
         return r * 180 / Math.PI;
@@ -77,9 +80,9 @@ function main() {
         gl.useProgram(program);
     
         gl.enableVertexAttribArray(positionLocation);
-    
+  
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    
+
         var size = 3;
         var type = gl.FLOAT;
         var normalize = false;
@@ -88,7 +91,17 @@ function main() {
         gl.vertexAttribPointer(
             positionLocation, size, type, normalize, stride, offset);
     
-        gl.uniform4fv(colorLocation, color);
+        gl.enableVertexAttribArray(colorLocation);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+
+        var size = 3;
+        var type = gl.UNSIGNED_BYTE;
+        var normalize = true;
+        var stride = 0;
+        var offset = 0;
+        gl.vertexAttribPointer(
+            colorLocation, size, type, normalize, stride, offset);
         
         var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
         matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
@@ -246,7 +259,7 @@ var m4 = {
   
 };
 
-function setGeometry(gl, x, y) {
+function setGeometry(gl) {
     gl.bufferData(
         gl.ARRAY_BUFFER,
         new Float32Array([
@@ -380,4 +393,138 @@ function setGeometry(gl, x, y) {
         gl.STATIC_DRAW);
 }
   
+function setColors(gl) {
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Uint8Array([
+            // left column front
+            200,  70, 120,
+            200,  70, 120,
+            200,  70, 120,
+            200,  70, 120,
+            200,  70, 120,
+            200,  70, 120,
+  
+            // top rung front
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+  
+            // middle rung front
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+          200,  70, 120,
+  
+            // left column back
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+  
+            // top rung back
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+  
+            // middle rung back
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+          80, 70, 200,
+  
+            // top
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+          70, 200, 210,
+  
+            // top rung right
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+          200, 200, 70,
+  
+            // under top rung
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+          210, 100, 70,
+  
+            // between top rung and middle
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+          210, 160, 70,
+  
+            // top of middle rung
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+          70, 180, 210,
+  
+            // right of middle rung
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+          100, 70, 210,
+  
+            // bottom of middle rung.
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+          76, 210, 100,
+  
+            // right of bottom
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+          140, 210, 80,
+  
+            // bottom
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+          90, 130, 110,
+  
+            // left side
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220,
+          160, 160, 220]),
+        gl.STATIC_DRAW);
+}
+
 main();
